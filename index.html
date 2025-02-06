@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DEANDRA</title>
+    
+    <!-- Link Font Awesome untuk ikon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .music-box {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 320px;
+            text-align: center;
+        }
+
+        .music-box video {
+            width: 100%;
+            max-width: 250px;
+            border-radius: 15px;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .play-button {
+            padding: 15px;
+            font-size: 24px;
+            background-color: #1DB954;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background-color 0.3s;
+        }
+
+        .play-button:hover {
+            background-color: #17a44b;
+        }
+
+        .progress-container {
+            margin-top: 15px;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .time-display {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 5px;
+            font-size: 14px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="music-box">
+        <video src="love.mp4" autoplay muted loop></video>
+        <h2>UNTUK DEANDRA</h2>
+        <audio id="audio" src="fav.mp3"></audio>
+
+        <div class="button-container">
+            <button class="play-button" onclick="playPause()">
+                <i id="playIcon" class="fa fa-play"></i>
+            </button>
+        </div>
+
+        <div class="progress-container">
+            <input type="range" id="progressBar" value="0" min="0" max="100">
+            <div class="time-display">
+                <span id="currentTime">0:00</span>
+                <span id="totalTime">0:00</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var audio = document.getElementById('audio');
+        var progressBar = document.getElementById('progressBar');
+        var currentTimeDisplay = document.getElementById('currentTime');
+        var totalTimeDisplay = document.getElementById('totalTime');
+        var playIcon = document.getElementById('playIcon');
+
+        function playPause() {
+            if (audio.paused) {
+                audio.play();
+                playIcon.classList.remove('fa-play');
+                playIcon.classList.add('fa-pause');
+            } else {
+                audio.pause();
+                playIcon.classList.remove('fa-pause');
+                playIcon.classList.add('fa-play');
+            }
+        }
+
+        function formatTime(seconds) {
+            var minutes = Math.floor(seconds / 60);
+            var secs = Math.floor(seconds % 60);
+            if (secs < 10) {
+                secs = "0" + secs;
+            }
+            return minutes + ":" + secs;
+        }
+
+        audio.addEventListener('timeupdate', function() {
+            var progress = (audio.currentTime / audio.duration) * 100;
+            progressBar.value = progress;
+            currentTimeDisplay.textContent = formatTime(audio.currentTime);
+        });
+
+        audio.addEventListener('loadedmetadata', function() {
+            totalTimeDisplay.textContent = formatTime(audio.duration);
+        });
+
+        progressBar.addEventListener('input', function() {
+            var newTime = (progressBar.value / 100) * audio.duration;
+            audio.currentTime = newTime;
+        });
+    </script>
+</body>
+</html>
